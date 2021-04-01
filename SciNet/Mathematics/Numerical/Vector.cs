@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.Serialization;
 using SciNet.Mathematics.Numerical.Metadata;
 
 namespace SciNet.Mathematics.Numerical
 {
     public static class Vector
     {
+        #region Factories
         [Description("Create a new row vector with the provided values")]
         public static Vector<T> Row<T>(params T[] entries) where T : struct, IConvertible, IComparable<T>, IEquatable<T> =>
            new(VectorKind.Row, entries);
@@ -29,17 +29,20 @@ namespace SciNet.Mathematics.Numerical
         public static Vector<decimal> Zero(VectorKind kind, int length) =>
             new(kind, Enumerable.Repeat<decimal>(0, length));
 
-        [Description("Creates a zero vector with the specified orientation and length")]
+        [Description("Creates a random vector with the specified orientation and length")]
         public static Vector<decimal> Random(VectorKind kind, int length) =>
             new(kind, Enumerable.Repeat<decimal>(0, length).Select(_ => Convert.ToDecimal(_random.NextDouble())));
+        #endregion
 
         #region Internal
-        internal static Vector<decimal> GetPrototype(VectorKind kind, VectorPrototype prototype, int length) => prototype switch
-        {
-            VectorPrototype.Zero => Zero(kind, length),
-            VectorPrototype.Random => Random(kind, length),
-            _ => throw new NotImplementedException($"No prototype generator exists for the vector prototype '{prototype}'")
-        };
+        internal static Vector<decimal> GetPrototype(VectorKind kind, VectorPrototype prototype, int length) => length <= 0
+            ? throw new ArgumentException("Length must be greater than 0", nameof(length))
+            : prototype switch
+            {
+                VectorPrototype.Zero => Zero(kind, length),
+                VectorPrototype.Random => Random(kind, length),
+                _ => throw new NotImplementedException($"No prototype generator exists for the vector prototype '{prototype}'")
+            };
 
         internal static readonly Random _random = new();
         #endregion
@@ -55,7 +58,7 @@ namespace SciNet.Mathematics.Numerical
         public IReadOnlyList<T> Entries { get; }
 
         [Description("The number of entries in this vector")]
-        public ulong Length { get; }
+        public int Length { get; }
 
         [Description("Canonical string representation of this vector this vector")]
         public override string ToString() => string.Concat($"[{string.Join(", ", Entries)}]", Kind == VectorKind.Column ? "^T" : string.Empty);
@@ -72,7 +75,7 @@ namespace SciNet.Mathematics.Numerical
         {
             Kind = kind;
             Entries = entries.ToArray();
-            Length = Convert.ToUInt64(Entries.Count);
+            Length = Entries.Count;
         }
         #endregion
     }
@@ -85,5 +88,4 @@ namespace SciNet.Mathematics.Numerical
         [Description("A vector with random values in the range (0, 1)")]
         Random
     }
-
 }
