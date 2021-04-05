@@ -1,17 +1,17 @@
 ﻿using System;
 
-namespace SciNet.Core
+namespace SciNet.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class FactoryAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
+    public sealed class PropertyAttribute : Attribute
     {
-        internal Type ValueType { get; }
+        public Type ValueType { get; }
 
-        internal string Description { get; }
+        public string Description { get; }
 
-        public FactoryAttribute(Type valueType, string description)
+        public PropertyAttribute(Type valueType, string description)
         {
-            ValueType = valueType.IsValueType 
+            ValueType = valueType.IsValueType
                 ? valueType
                 : throw new ArgumentException("Specified type must be a value type", nameof(valueType));
 

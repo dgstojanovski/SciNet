@@ -1,55 +1,115 @@
 ﻿using System;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using SciNet.Core;
+using SciNet.Core.Attributes;
 
 namespace SciNet.Mathematics
 {
-    [ValueType(typeof(RealValue), "Any value in the set of real numbers")]
-    public readonly struct RealValue
+    [Value(typeof(RealValue), "Any value in the set of real numbers")]
+    public readonly struct RealValue : IValue
     {
         #region Properties
-        [ValueProperty(typeof(RealValue), "The signed value of this real number")]
+        [Property(typeof(RealValue), "The signed value of this real number")]
         public double Value => IntegerValue ?? DecimalValue;
         
-        [ValueProperty(typeof(RealValue), "The absolute value of this real number")]
+        [Property(typeof(RealValue), "The absolute value of this real number")]
         public double AbsoluteValue => Math.Abs(IntegerValue ?? DecimalValue);
 
-        [ValueProperty(typeof(RealValue), "The absolute value of this real number")]
+        [Property(typeof(RealValue), "The absolute value of this real number")]
         public long IntegralPart => IntegerValue ?? Convert.ToInt64(Math.Round(DecimalValue));
         
-        [ValueProperty(typeof(RealValue), "The absolute value of this real number")]
+        [Property(typeof(RealValue), "The absolute value of this real number")]
         public long FractionalPart => IntegerValue ?? Convert.ToInt64(DecimalValue - Math.Round(DecimalValue));
 
-        [ValueProperty(typeof(RealValue), "Returns true if this real number is an integer")]
+        [Property(typeof(RealValue), "Returns true if this real number is an integer")]
         public bool IsInteger => IntegerValue != null;
         
-        [ValueProperty(typeof(RealValue), "Returns true if this real number is a rational number")]
+        [Property(typeof(RealValue), "Returns true if this real number is a rational number")]
         public bool IsRational => IsInteger || Numerator != null && Denominator != null;
         
-        [ValueProperty(typeof(RealValue), "The square root of this real number")]
+        [Property(typeof(RealValue), "The square root of this real number")]
         public RealValue SquareRoot => Real.Decimal(Math.Pow(DecimalValue, 2));
 
-        [ValueProperty(typeof(RealValue), "Returns the specified root of this real number")]
+        [Property(typeof(RealValue), "Returns the specified root of this real number")]
         public RealValue Root(int power) => Real.Decimal(Math.Pow(DecimalValue, 1.0 / power));
         
-        [ValueProperty(typeof(RealValue), "Returns the square of this real number")]
+        [Property(typeof(RealValue), "Returns the square of this real number")]
         public RealValue Square => Real.Decimal(Math.Pow(DecimalValue, 2));
         
-        [ValueProperty(typeof(RealValue), "Returns the specified power of this real number")]
+        [Property(typeof(RealValue), "Returns the specified power of this real number")]
         public RealValue Power(double power) => Real.Decimal(Math.Pow(DecimalValue, power));
         
-        [ValueProperty(typeof(RealValue), "Returns the arctangent of this real value in radians")]
+        [Property(typeof(RealValue), "Returns the arctangent of this real value in radians")]
         public RealValue ArcTangent => Real.Decimal(Math.Atan(DecimalValue));
         #endregion
 
+
+
+        #region Constructors
+        internal RealValue(double value)
+        {
+            DecimalValue = value;
+            IntegerValue = null;
+            Numerator = null;
+            Denominator = null;
+        }
+        
+        internal RealValue(long value)
+        {
+            DecimalValue = value;
+            IntegerValue = value;
+            Numerator = null;
+            Denominator = null;
+        }
+        
+        internal RealValue(long numerator, long denominator)
+        {
+            DecimalValue = (double)numerator / denominator;
+            IntegerValue = null;
+            Numerator = numerator;
+            Denominator = denominator;
+        }
+        #endregion
+
+        #region Implementations
+        public string ToJson(bool pretty = false) => JsonSerializer
+            .Serialize(new
+            {
+                Value,
+                AbsoluteValue,
+                IntegralPart,
+                FractionalPart,
+                IsInteger,
+                IsRational
+            }, new JsonSerializerOptions
+            {
+                WriteIndented = pretty, 
+                Encoder = pretty ? JavaScriptEncoder.UnsafeRelaxedJsonEscaping : JavaScriptEncoder.Default
+            });
+        
+        public string ToInline() => IsInteger 
+            ? $"{IntegerValue}" 
+            : IsRational ? $"{Numerator}/{Denominator}" : $"{DecimalValue}";
+        #endregion Implementations
+
+        #region Fields
+        private double DecimalValue { get; }
+        
+        private long? IntegerValue { get; }
+        
+        private long? Numerator { get; }
+        
+        private long? Denominator { get; }
+        #endregion Fields
+        
         #region Overrides
         public override bool Equals(object other) => other != null && this == other;
 
         public override int GetHashCode() => base.GetHashCode();
         
-        public override string ToString() => IsInteger 
-            ? $"{IntegerValue}" 
-            : IsRational ? $"{Numerator}/{Denominator}" : $"{DecimalValue}";
-        #endregion
+        public override string ToString() => ToInline();
+        #endregion Overrides
 
         #region Operators
         public static bool operator ==(RealValue first, RealValue second) => first.IsInteger && second.IsInteger
@@ -123,42 +183,6 @@ namespace SciNet.Mathematics
             first.IntegerValue != null && second.IntegerValue != null
                 ? Real.Rational(first.IntegerValue.Value, second.IntegerValue.Value)
                 : Real.Decimal(first.Value / second.Value);
-        #endregion
-
-        #region Constructors
-        internal RealValue(double value)
-        {
-            DecimalValue = value;
-            IntegerValue = null;
-            Numerator = null;
-            Denominator = null;
-        }
-        
-        internal RealValue(long value)
-        {
-            DecimalValue = value;
-            IntegerValue = value;
-            Numerator = null;
-            Denominator = null;
-        }
-        
-        internal RealValue(long numerator, long denominator)
-        {
-            DecimalValue = (double)numerator / denominator;
-            IntegerValue = null;
-            Numerator = numerator;
-            Denominator = denominator;
-        }
-        #endregion
-
-        #region Fields
-        private double DecimalValue { get; }
-        
-        private long? IntegerValue { get; }
-        
-        private long? Numerator { get; }
-        
-        private long? Denominator { get; }
-        #endregion
+        #endregion Operators
     }
 }

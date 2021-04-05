@@ -1,37 +1,33 @@
-﻿using SciNet.Core;
+﻿using System.Text.Encodings.Web;
+using System.Text.Json;
+using SciNet.Core;
+using SciNet.Core.Attributes;
+using static SciNet.Mathematics.Real;
 
 namespace SciNet.Mathematics
 {
-    [ValueType(typeof(ComplexValue), "Complex value with both real and imaginary parts")]
-    public readonly struct ComplexValue
+    [Value(typeof(ComplexValue), "Complex value with both real and imaginary parts")]
+    public readonly struct ComplexValue : IValue
     {
         #region Properties
-        [ValueProperty(typeof(ComplexValue), "The real part of this complex value")]
+        [Property(typeof(ComplexValue), "The real part of this complex value")]
         public RealValue RealPart { get; }
         
-        [ValueProperty(typeof(ComplexValue), "The imaginary part of this complex value")]
+        [Property(typeof(ComplexValue), "The imaginary part of this complex value")]
         public RealValue ImaginaryPart { get; }
 
-        [ValueProperty(typeof(ComplexValue), "Returns true if this complex value is also a real value")]
-        public bool IsReal => ImaginaryPart == Real.Zero;
+        [Property(typeof(ComplexValue), "Returns true if this complex value is also a real value")]
+        public bool IsReal => ImaginaryPart == Zero;
 
-        [ValueProperty(typeof(ComplexValue), "The magnitude this complex value represented as a cartesian vector")]
+        [Property(typeof(ComplexValue), "The magnitude this complex value represented as a cartesian vector")]
         public RealValue Magnitude => IsReal 
             ? RealPart 
-            : Real.SquareRoot(RealPart.Square + ImaginaryPart.Square);
+            : SquareRoot(RealPart.Square + ImaginaryPart.Square);
         
-        [ValueProperty(typeof(ComplexValue), "The angle this complex value represented as a cartesian vector")]
+        [Property(typeof(ComplexValue), "The angle this complex value represented as a cartesian vector")]
         public RealValue Argument => IsReal 
-            ? Real.Zero 
-            : Real.ArcTangent(ImaginaryPart / RealPart);
-        #endregion
-
-        #region Overrides
-        public override string ToString() => IsReal
-            ? RealPart.ToString()
-            : ImaginaryPart.Value > 0
-                ? $"({RealPart} + {(ImaginaryPart.IsInteger && (long)ImaginaryPart.AbsoluteValue == 1 ? string.Empty : ImaginaryPart.AbsoluteValue)}i)"
-                : $"({RealPart} - {(ImaginaryPart.IsInteger && (long)ImaginaryPart.AbsoluteValue == 1 ? string.Empty : ImaginaryPart.AbsoluteValue)}i)";
+            ? Zero 
+            : ArcTangent(ImaginaryPart / RealPart);
         #endregion
 
         #region Constructors
@@ -40,6 +36,35 @@ namespace SciNet.Mathematics
             RealPart = realPart;
             ImaginaryPart = imaginaryPart;
         }
-        #endregion
+        #endregion Constructors
+
+        #region Implementations
+        public string ToJson(bool pretty = false) => JsonSerializer
+            .Serialize(new
+            {
+                Magnitude = Magnitude.ToInline(),
+                Argument = Argument.ToString(),
+                RealPart = RealPart.ToInline(),
+                ImaginaryPart = RealPart.ToInline()
+            }, new JsonSerializerOptions
+            {
+                WriteIndented = pretty, 
+                Encoder = pretty ? JavaScriptEncoder.UnsafeRelaxedJsonEscaping : JavaScriptEncoder.Default
+            });
+        
+        public string ToInline() => IsReal
+            ? RealPart.ToString()
+            : ImaginaryPart.Value > 0
+                ? $"({RealPart} + {(ImaginaryPart.IsInteger && (long)ImaginaryPart.AbsoluteValue == 1 ? string.Empty : ImaginaryPart.AbsoluteValue)}i)"
+                : $"({RealPart} - {(ImaginaryPart.IsInteger && (long)ImaginaryPart.AbsoluteValue == 1 ? string.Empty : ImaginaryPart.AbsoluteValue)}i)";
+        #endregion Implementations
+        
+        #region Overrides
+
+        public override string ToString() => ToInline();
+
+        #endregion Overrides
+
+
     }
 }

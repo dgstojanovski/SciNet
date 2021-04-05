@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace SciNet.Core
+namespace SciNet.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
-    public sealed class ValuePropertyAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Struct)]
+    public sealed class ValueAttribute : Attribute
     {
         public Type ValueType { get; }
 
         public string Description { get; }
 
-        public ValuePropertyAttribute(Type valueType, string description)
+        public ValueAttribute(Type valueType, string description)
         {
             ValueType = valueType.IsValueType
                 ? valueType

@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using SciNet.Core;
+using SciNet.Core.Attributes;
 
 namespace SciNet.Generator.Generators
 {
-    public class ReadmeGenerator : IGenerator<FactoryAttribute>, IGenerator<ValueTypeAttribute>
+    public class DefinitionDocumentationGenerator : IGenerator<DefinitionAttribute>
     {
         public IEnumerable<FileInfo> Generate(Type type)
         {
             var directory = Program.Working
-                .CreateSubdirectory(Program.DocumentationDirectory);
+                .CreateSubdirectory(DocumentationGenerator.Directory);
 
             var path = Path.Combine(directory.FullName, $"{type.Name}.md");
             

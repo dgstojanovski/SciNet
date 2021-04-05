@@ -1,35 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using SciNet.Core;
+using SciNet.Core.Attributes;
 
 namespace SciNet.Mathematics
 {
-    [ValueType(typeof(VectorValue), "Immutable type representing vectors")]
-    public readonly struct VectorValue
+    [Value(typeof(VectorValue), "Immutable type representing vectors")]
+    public readonly struct VectorValue : IValue
     {
         #region Properties
-        [ValueProperty(typeof(VectorValue), "Describes whether this vector is a row or column vector")]
+        [Property(typeof(VectorValue), "Describes whether this vector is a row or column vector")]
         public Vector.Types Type { get; }
 
-        [ValueProperty(typeof(VectorValue), "The underlying decimal array representing this vector")]
+        [Property(typeof(VectorValue), "The underlying decimal array representing this vector")]
         private IReadOnlyList<RealValue> Entries { get; }
 
-        [ValueProperty(typeof(VectorValue), "The number of entries in this vector")]
+        [Property(typeof(VectorValue), "The number of entries in this vector")]
         public int Length { get; }
 
-        [ValueProperty(typeof(VectorValue), "The transpose of this vector, [a_1, a_2, ..., a_n]^T")]
+        [Property(typeof(VectorValue), "The transpose of this vector, [a_1, a_2, ..., a_n]^T")]
         public VectorValue Transpose => Type == Vector.Types.Row
             ? Vector.Column(Entries.ToArray())
             : Vector.Row(Entries.ToArray());
-        #endregion
-
-        #region Operators
-        public RealValue this[int i] => Entries[i];
-        #endregion
-
-        #region Overrides
-        public override string ToString() => 
-            string.Concat($"[{string.Join(", ", Entries)}]", Type == Vector.Types.Column ? "^T" : string.Empty);
         #endregion
 
         #region Constructors
@@ -40,5 +34,29 @@ namespace SciNet.Mathematics
             Length = Entries.Count;
         }
         #endregion
+        
+        #region Implementations
+        public string ToJson(bool pretty = false) => 
+            JsonSerializer.Serialize(new
+            {
+                Length,
+                Type = Type.ToString(),
+                Entries = Entries.Select(e => e.ToInline()).ToArray()
+            }, new JsonSerializerOptions
+            {
+                WriteIndented = pretty, 
+                Encoder = pretty ? JavaScriptEncoder.UnsafeRelaxedJsonEscaping : JavaScriptEncoder.Default
+            });
+        public string ToInline() => 
+            string.Concat($"[{string.Join(", ", Entries)}]", Type == Vector.Types.Column ? "^T" : string.Empty);
+        #endregion Implementations
+        
+        #region Overrides
+        public override string ToString() => ToInline();
+        #endregion Overrides
+        
+        #region Operators
+        public RealValue this[int i] => Entries[i];
+        #endregion Operators
     }
 }

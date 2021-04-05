@@ -1,17 +1,17 @@
 ﻿using System;
 
-namespace SciNet.Core
+namespace SciNet.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Enum)]
-    public sealed class ValuePropertyOptionAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class DefinitionAttribute : Attribute
     {
-        public Type ValueType { get; }
+        internal Type ValueType { get; }
 
-        public string Description { get; }
+        internal string Description { get; }
 
-        public ValuePropertyOptionAttribute(Type valueType, string description)
+        public DefinitionAttribute(Type valueType, string description)
         {
-            ValueType = valueType.IsValueType
+            ValueType = valueType.IsValueType 
                 ? valueType
                 : throw new ArgumentException("Specified type must be a value type", nameof(valueType));
 

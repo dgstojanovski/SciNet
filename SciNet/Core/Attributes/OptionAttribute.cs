@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace SciNet.Core
+namespace SciNet.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    public sealed class SpecialValueAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Enum)]
+    public sealed class OptionAttribute : Attribute
     {
         public Type ValueType { get; }
 
         public string Description { get; }
 
-        public SpecialValueAttribute(Type valueType, string description)
+        public OptionAttribute(Type valueType, string description)
         {
             ValueType = valueType.IsValueType
                 ? valueType

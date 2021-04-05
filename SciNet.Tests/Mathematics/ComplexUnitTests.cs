@@ -1,6 +1,5 @@
 ﻿using Xunit;
 using Xunit.Abstractions;
-using SciNet.Mathematics;
 using static SciNet.Mathematics.Real;
 using static SciNet.Mathematics.Complex;
 
@@ -8,6 +7,13 @@ namespace SciNet.Tests.Mathematics
 {
     public class ComplexUnitTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public ComplexUnitTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+        
         [Theory]
         [InlineData(long.MinValue, long.MinValue)]
         [InlineData(-1, -1)]
@@ -22,7 +28,7 @@ namespace SciNet.Tests.Mathematics
         {
             var complex = Value(real, imaginary);
             
-            DumpComplexValue(complex);
+            _output.WriteLine(complex.ToJson(true));
             
             Assert.True(complex.RealPart == real);
             Assert.True(complex.ImaginaryPart == imaginary);
@@ -42,7 +48,7 @@ namespace SciNet.Tests.Mathematics
         {
             var complex = Value(real, imaginary);
             
-            DumpComplexValue(complex);
+            _output.WriteLine(complex.ToJson(true));
             
             Assert.True(complex.RealPart == real);
             Assert.True(complex.ImaginaryPart == imaginary);
@@ -62,7 +68,7 @@ namespace SciNet.Tests.Mathematics
         {
             var complex = Value(Decimal(real), Decimal(imaginary));
             
-            DumpComplexValue(complex);
+            _output.WriteLine(complex.ToJson(true));
             
             Assert.True(complex.RealPart == real);
             Assert.True(complex.ImaginaryPart == imaginary);
@@ -78,7 +84,7 @@ namespace SciNet.Tests.Mathematics
         {
             var complex = Value(real);
             
-            DumpComplexValue(complex);
+            _output.WriteLine(complex.ToJson(true));
             
             Assert.True(complex.RealPart == real);
             Assert.True(complex.Magnitude == real);
@@ -96,28 +102,12 @@ namespace SciNet.Tests.Mathematics
         {
             var complex = Value(real);
             
-            DumpComplexValue(complex);
+            _output.WriteLine(complex.ToJson(true));
             
             Assert.True(complex.RealPart == real);
             Assert.True(complex.Magnitude == real);
             Assert.True(complex.ImaginaryPart == Zero);
             Assert.True(complex.Argument == Zero);
-        }
-        
-        private readonly ITestOutputHelper _output;
-
-        public ComplexUnitTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
-        private void DumpComplexValue(ComplexValue complex)
-        {
-            _output.WriteLine($"Value: {complex}");
-            _output.WriteLine($"RealPart: {complex.RealPart}");
-            _output.WriteLine($"ImaginaryPart: {complex.ImaginaryPart}");
-            _output.WriteLine($"Magnitude: {complex.Magnitude}");
-            _output.WriteLine($"Argument: {complex.Argument}");
         }
     }
 }
