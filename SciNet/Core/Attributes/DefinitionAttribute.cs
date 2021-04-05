@@ -16,8 +16,8 @@ namespace SciNet.Core.Attributes
                 : throw new ArgumentException("A non-empty description must be provided", nameof(description));
         }
 
-        internal Type ValueType { get; }
+        public Type ValueType { get; }
 
-        internal string Description { get; }
+        public string Description { get; }
     }
 }
