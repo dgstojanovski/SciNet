@@ -16,25 +16,25 @@ namespace SciNet.Mathematics
         public Vector.Types Type { get; }
 
         [Property(typeof(VectorValue), "The underlying decimal array representing this vector")]
-        private IReadOnlyList<RealValue> Entries { get; }
+        private ComplexValue[] Entries { get; }
 
         [Property(typeof(VectorValue), "The number of entries in this vector")]
         public int Length { get; }
 
         [Property(typeof(VectorValue), "The transpose of this vector, [a_1, a_2, ..., a_n]^T")]
         public VectorValue Transpose => Type == Vector.Types.Row
-            ? Vector.Column(Entries.ToArray())
-            : Vector.Row(Entries.ToArray());
+            ? Vector.Column(Entries)
+            : Vector.Row(Entries);
 
-        #endregion
+        #endregion Properties
 
         #region Constructors
 
-        internal VectorValue(Vector.Types type, IEnumerable<RealValue> entries)
+        internal VectorValue(Vector.Types type, params ComplexValue[] entries)
         {
             Type = type;
-            Entries = entries.ToArray();
-            Length = Entries.Count;
+            Entries = entries;
+            Length = entries.Length;
         }
 
         #endregion
@@ -73,7 +73,7 @@ namespace SciNet.Mathematics
 
         #region Operators
 
-        public RealValue this[int i] => Entries[i];
+        public ComplexValue this[int i] => Entries[i];
 
         #endregion Operators
     }

@@ -162,6 +162,16 @@ namespace SciNet.Mathematics
                     ? first.Numerator != second.Numerator || first.Denominator != second.Denominator
                     : Math.Abs(first.Value - second.Value) <= Real.Epsilon.Value;
         }
+        
+        public static bool operator ==(RealValue first, ComplexValue second)
+        {
+            return second.IsReal && first == second.RealPart;
+        }
+
+        public static bool operator !=(RealValue first, ComplexValue second)
+        {
+            return !second.IsReal || first != second.RealPart;
+        }
 
         public static bool operator ==(RealValue first, long second)
         {

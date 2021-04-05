@@ -28,6 +28,7 @@ namespace SciNet.Tests.Mathematics
         {
             var complex = Value(real, imaginary);
 
+            _output.WriteLine(complex.ToInline());
             _output.WriteLine(complex.ToJson(true));
 
             Assert.True(complex.RealPart == real);
@@ -48,6 +49,7 @@ namespace SciNet.Tests.Mathematics
         {
             var complex = Value(real, imaginary);
 
+            _output.WriteLine(complex.ToInline());
             _output.WriteLine(complex.ToJson(true));
 
             Assert.True(complex.RealPart == real);
@@ -68,8 +70,9 @@ namespace SciNet.Tests.Mathematics
         {
             var complex = Value(Decimal(real), Decimal(imaginary));
 
+            _output.WriteLine(complex.ToInline());
             _output.WriteLine(complex.ToJson(true));
-
+            
             Assert.True(complex.RealPart == real);
             Assert.True(complex.ImaginaryPart == imaginary);
         }
@@ -84,8 +87,9 @@ namespace SciNet.Tests.Mathematics
         {
             var complex = Value(real);
 
+            _output.WriteLine(complex.ToInline());
             _output.WriteLine(complex.ToJson(true));
-
+            
             Assert.True(complex.RealPart == real);
             Assert.True(complex.Magnitude == real);
             Assert.True(complex.ImaginaryPart == Zero);
@@ -102,8 +106,9 @@ namespace SciNet.Tests.Mathematics
         {
             var complex = Value(real);
 
+            _output.WriteLine(complex.ToInline());
             _output.WriteLine(complex.ToJson(true));
-
+            
             Assert.True(complex.RealPart == real);
             Assert.True(complex.Magnitude == real);
             Assert.True(complex.ImaginaryPart == Zero);

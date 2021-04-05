@@ -7,30 +7,49 @@ namespace SciNet.Mathematics
     [Definition(typeof(ComplexValue), "Numbers with both real and imaginary parts")]
     public sealed class Complex : IDefinition
     {
-        private Complex()
-        {
-        }
+        private Complex() { }
 
         [Factory(typeof(ComplexValue), "Complex value with real and imaginary parts")]
-        public static ComplexValue Value(RealValue realPart, RealValue imaginaryPart)
+        public static ComplexValue Value(RealValue real, RealValue imaginary)
         {
-            return new(realPart, imaginaryPart);
+            return new(real, imaginary);
+        }
+        
+        [Factory(typeof(ComplexValue), "Complex value with real and imaginary parts")]
+        public static ComplexValue Value((RealValue Real, RealValue Imaginary) value)
+        {
+            var (real, imaginary) = value;
+            return new ComplexValue(real, imaginary);
         }
 
         [Factory(typeof(ComplexValue), "Complex value with real and imaginary decimal parts")]
-        public static ComplexValue Value(double realPart, double imaginaryPart)
+        public static ComplexValue Value(double real, double imaginary)
         {
-            return new(Decimal(realPart), Decimal(imaginaryPart));
+            return new(Decimal(real), Decimal(imaginary));
+        }
+        
+        [Factory(typeof(ComplexValue), "Complex value with real and imaginary decimal parts")]
+        public static ComplexValue Value((double Real, double Imaginary) value)
+        {
+            var (real, imaginary) = value;
+            return new ComplexValue(Decimal(real), Decimal(imaginary));
         }
 
         [Factory(typeof(ComplexValue), "Complex value with real and imaginary integer parts")]
-        public static ComplexValue Value(long realPart, long imaginaryPart)
+        public static ComplexValue Value(long real, long imaginary)
         {
-            return new(Integer(realPart), Integer(imaginaryPart));
+            return new(Integer(real), Integer(imaginary));
+        }
+        
+        [Factory(typeof(ComplexValue), "Complex value with real and imaginary integer parts")]
+        public static ComplexValue Value((long Real, long Imaginary) value)
+        {
+            var (real, imaginary) = value;
+            return new ComplexValue(Integer(real), Integer(imaginary));
         }
 
         [Factory(typeof(ComplexValue), "Real value")]
-        public static ComplexValue Value(RealValue value)
+        public static ComplexValue ToComplex(RealValue value)
         {
             return new(value, Zero);
         }

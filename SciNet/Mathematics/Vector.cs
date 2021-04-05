@@ -4,6 +4,7 @@ using System.Linq;
 using SciNet.Core;
 using SciNet.Core.Attributes;
 using static SciNet.Mathematics.Real;
+using static SciNet.Mathematics.Complex;
 
 namespace SciNet.Mathematics
 {
@@ -22,24 +23,40 @@ namespace SciNet.Mathematics
 
         private static readonly Random Generator = new();
 
-        private Vector()
-        {
-        }
+        private Vector() { }
 
         [Factory(typeof(VectorValue), "Create a new row vector with the provided integer values")]
         public static VectorValue Row(params long[] entries)
         {
-            return new(Types.Row, entries.Select(Integer));
+            return new(Types.Row, entries.Select(Integer).Select(ToComplex).ToArray());
+        }
+        
+        [Factory(typeof(VectorValue), "Create a new row vector with the provided integer values")]
+        public static VectorValue Row(params (long Real, long Imaginary)[] entries)
+        {
+            return new(Types.Row, entries.Select(Value).ToArray());
         }
 
         [Factory(typeof(VectorValue), "Create a new row vector with the provided double values")]
         public static VectorValue Row(params double[] entries)
         {
-            return new(Types.Row, entries.Select(Decimal));
+            return new(Types.Row, entries.Select(Decimal).Select(ToComplex).ToArray());
+        }
+        
+        [Factory(typeof(VectorValue), "Create a new row vector with the provided complex decimal values")]
+        public static VectorValue Row(params (double Real, double Imaginary)[] entries)
+        {
+            return new(Types.Row, entries.Select(Value).ToArray());
         }
 
         [Factory(typeof(VectorValue), "Create a new row vector with the provided double values")]
         public static VectorValue Row(params RealValue[] entries)
+        {
+            return new(Types.Row, entries.Select(ToComplex).ToArray());
+        }
+        
+        [Factory(typeof(VectorValue), "Create a new row vector with the provided double values")]
+        public static VectorValue Row(params ComplexValue[] entries)
         {
             return new(Types.Row, entries);
         }
@@ -47,17 +64,23 @@ namespace SciNet.Mathematics
         [Factory(typeof(VectorValue), "Create a new column vector with the provided integer values")]
         public static VectorValue Column(params long[] entries)
         {
-            return new(Types.Column, entries.Select(Integer));
+            return new(Types.Column, entries.Select(Integer).Select(ToComplex).ToArray());
         }
 
         [Factory(typeof(VectorValue), "Create a new column vector with the provided double values")]
         public static VectorValue Column(params double[] entries)
         {
-            return new(Types.Column, entries.Select(Decimal));
+            return new(Types.Column, entries.Select(Decimal).Select(ToComplex).ToArray());
         }
 
         [Factory(typeof(VectorValue), "Create a new column vector with the provided values")]
         public static VectorValue Column(params RealValue[] entries)
+        {
+            return new(Types.Column, entries.Select(ToComplex).ToArray());
+        }
+        
+        [Factory(typeof(VectorValue), "Create a new column vector with the provided values")]
+        public static VectorValue Column(params ComplexValue[] entries)
         {
             return new(Types.Column, entries);
         }
@@ -66,7 +89,7 @@ namespace SciNet.Mathematics
         public static VectorValue Zero(int length, Types type = Types.Row)
         {
             return length > 0
-                ? new VectorValue(type, Enumerable.Repeat(Real.Zero, length))
+                ? new VectorValue(type, Enumerable.Repeat(Real.Zero, length).Select(ToComplex).ToArray())
                 : throw new ArgumentException("Length must be greater than 0", nameof(length));
         }
 
@@ -74,7 +97,10 @@ namespace SciNet.Mathematics
         public static VectorValue Random(int length, Types type = Types.Row)
         {
             return length > 0
-                ? new VectorValue(type, Enumerable.Range(0, length).Select(_ => Decimal(Generator.NextDouble())))
+                ? new VectorValue(type, Enumerable.Range(0, length)
+                    .Select(_ => Decimal(Generator.NextDouble()))
+                    .Select(ToComplex)
+                    .ToArray())
                 : throw new ArgumentException("Length must be greater than 0", nameof(length));
         }
     }

@@ -10,6 +10,6 @@ namespace SciNet.Core
 
     public interface IGenerator
     {
-        IEnumerable<FileInfo> Generate(Type type);
+        IEnumerable<FileInfo> Generate(Type type, DirectoryInfo destination);
     }
 }

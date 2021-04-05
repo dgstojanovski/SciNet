@@ -62,11 +62,16 @@ namespace SciNet.Mathematics
 
         public string ToInline()
         {
+            var real = RealPart.ToInline();
+            var imaginary = ImaginaryPart.IsInteger && (long) ImaginaryPart.AbsoluteValue == 1 
+                    ? "i" 
+                    : $"{Absolute(ImaginaryPart).ToInline()}i";
+            
             return IsReal
                 ? RealPart.ToString()
                 : ImaginaryPart.Value > 0
-                    ? $"({RealPart} + {(ImaginaryPart.IsInteger && (long) ImaginaryPart.AbsoluteValue == 1 ? string.Empty : ImaginaryPart.AbsoluteValue)}i)"
-                    : $"({RealPart} - {(ImaginaryPart.IsInteger && (long) ImaginaryPart.AbsoluteValue == 1 ? string.Empty : ImaginaryPart.AbsoluteValue)}i)";
+                    ? $"({real} + {imaginary})"
+                    : $"({real} - {imaginary})";
         }
 
         #endregion Implementations
@@ -79,5 +84,29 @@ namespace SciNet.Mathematics
         }
 
         #endregion Overrides
+        
+        #region Operators
+        
+        public static bool operator ==(ComplexValue first, ComplexValue second)
+        {
+            return first.RealPart == second.RealPart && first.ImaginaryPart == second.ImaginaryPart;
+        }
+
+        public static bool operator !=(ComplexValue first, ComplexValue second)
+        {
+            return first.RealPart != second.RealPart || first.ImaginaryPart != second.ImaginaryPart;
+        }
+        
+        public static bool operator ==(ComplexValue first, RealValue second)
+        {
+            return first.IsReal && first.RealPart == second;
+        }
+
+        public static bool operator !=(ComplexValue first, RealValue second)
+        {
+            return first.RealPart != second;
+        }
+
+        #endregion Operators
     }
 }

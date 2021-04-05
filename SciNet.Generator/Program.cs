@@ -10,18 +10,17 @@ namespace SciNet.Generator
 {
     public static class Program
     {
-        public static DirectoryInfo Working;
+        private static DirectoryInfo _working;
 
         public static void Main(string[] args)
         {
-            Working = new DirectoryInfo(args.Length > 0
+            _working = new DirectoryInfo(args.Length > 0
                 ? args[0]
-                : Path.Combine(Environment.CurrentDirectory, nameof(Working)));
+                : Path.Combine(Environment.CurrentDirectory, nameof(_working)));
+            if (_working.Exists)
+                _working.Delete(true);
 
-            if (Working.Exists)
-                Working.Delete(true);
-
-            Working.Create();
+            _working.Create();
 
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetExportedTypes())
@@ -52,12 +51,12 @@ namespace SciNet.Generator
             foreach (var generator in generators)
             foreach (var type in types)
             {
-                var generatorName = generator.GetType().FullName;
+                var generatorName = generator.GetType().Name;
                 var typeName = type.FullName;
 
                 try
                 {
-                    var files = generator.Generate(type).Select(f => f.FullName);
+                    var files = generator.Generate(type, _working).Select(f => f.FullName);
                     Console.WriteLine($"Executed {generatorName} for {typeName}: {string.Join(", ", files)}");
                 }
                 catch (Exception e)
