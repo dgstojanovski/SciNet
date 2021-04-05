@@ -1,7 +1,8 @@
 ﻿using System;
 using Xunit;
+using SciNet.Mathematics;
+using Xunit.Abstractions;
 using static SciNet.Mathematics.Real;
-using static SciNet.Mathematics.Complex;
 
 namespace SciNet.Tests.Mathematics
 {
@@ -36,6 +37,9 @@ namespace SciNet.Tests.Mathematics
         public void Factory_Decimal_Positive(decimal value)
         {
             var real = Decimal(Convert.ToDouble(value));
+
+            DumpRealValue(real);
+
             Assert.True(real == value);
             Assert.True(value == real);
         }
@@ -55,8 +59,28 @@ namespace SciNet.Tests.Mathematics
         public void Factory_Double_Positive(double value)
         {
             var real = Decimal(value);
+            
+            DumpRealValue(real);
+            
             Assert.True(real == value);
             Assert.True(value == real);
+        }
+        
+        private readonly ITestOutputHelper _output;
+
+        public RealUnitTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        private void DumpRealValue(RealValue real)
+        {
+            _output.WriteLine($"Value: {real}");
+            _output.WriteLine($"AbsoluteValue: {real.AbsoluteValue}");
+            _output.WriteLine($"IntegralPart: {real.IntegralPart}");
+            _output.WriteLine($"FractionalPart: {real.FractionalPart}");
+            _output.WriteLine($"Square: {real.Square}");
+            _output.WriteLine($"SquareRoot: {real.SquareRoot}");
         }
     }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using static SciNet.Mathematics.Real;
+using static SciNet.Mathematics.Complex;
 
 namespace SciNet.Mathematics
 {
@@ -11,11 +13,11 @@ namespace SciNet.Mathematics
         #region Public
         [FactoryMethod(typeof(VectorValue), "Create a new row vector with the provided integer values")]
         public static VectorValue Row(params long[] entries) =>
-            new(VectorKind.Row, entries.Select(Real.Integer));
+            new(VectorKind.Row, entries.Select(Integer));
         
         [FactoryMethod(typeof(VectorValue), "Create a new row vector with the provided double values")]
         public static VectorValue Row(params double[] entries) =>
-            new(VectorKind.Row, entries.Select(Real.Decimal));
+            new(VectorKind.Row, entries.Select(Decimal));
         
         [FactoryMethod(typeof(VectorValue), "Create a new row vector with the provided double values")]
         public static VectorValue Row(params RealValue[] entries) =>
@@ -27,11 +29,11 @@ namespace SciNet.Mathematics
 
         [FactoryMethod(typeof(VectorValue), "Create a new column vector with the provided integer values")]
         public static VectorValue Column(params long[] entries) =>
-            new(VectorKind.Column, entries.Select(Real.Integer));
+            new(VectorKind.Column, entries.Select(Integer));
         
         [FactoryMethod(typeof(VectorValue), "Create a new column vector with the provided double values")]
         public static VectorValue Column(params double[] entries) =>
-            new(VectorKind.Column, entries.Select(Real.Decimal));
+            new(VectorKind.Column, entries.Select(Decimal));
         
         [FactoryMethod(typeof(VectorValue), "Create a new column vector with the provided values")]
         public static VectorValue Column(params RealValue[] entries) =>
@@ -48,9 +50,9 @@ namespace SciNet.Mathematics
             : prototype switch
             {
                 VectorPrototype.Zero => 
-                    new VectorValue(kind, Enumerable.Repeat(Real.Zero, length)),
+                    new VectorValue(kind, Enumerable.Repeat(Zero, length)),
                 VectorPrototype.Random => 
-                    new VectorValue(kind, Enumerable.Repeat(Real.Zero, length).Select(_ => Real.Decimal(_random.NextDouble()))),
+                    new VectorValue(kind, Enumerable.Repeat(Zero, length).Select(_ => Decimal(_random.NextDouble()))),
                 _ => throw new NotImplementedException($"No prototype generator exists for the vector prototype '{prototype}'")
             };
 
@@ -62,21 +64,21 @@ namespace SciNet.Mathematics
     public readonly struct VectorValue
     {
         #region Public
-        [ValueTypeProperty(typeof(VectorValue), "Describes whether this vector is a row or column vector")]
+        [ValueProperty(typeof(VectorValue), "Describes whether this vector is a row or column vector")]
         public VectorKind Kind { get; }
 
-        [ValueTypeProperty(typeof(VectorValue), "The underlying decimal array representing this vector")]
+        [ValueProperty(typeof(VectorValue), "The underlying decimal array representing this vector")]
         public IReadOnlyList<RealValue> Entries { get; }
 
-        [ValueTypeProperty(typeof(VectorValue), "The number of entries in this vector")]
+        [ValueProperty(typeof(VectorValue), "The number of entries in this vector")]
         public int Length { get; }
 
         public RealValue this[int i] => Entries[i];
 
         public override string ToString() => string.Concat($"[{string.Join(", ", Entries)}]", Kind == VectorKind.Column ? "^T" : string.Empty);
 
-        // TODO: Make a mutator attribute
-        public VectorValue Transpose() => Kind == VectorKind.Row
+        [ValueProperty(typeof(VectorValue), "The transpose of this vector, [a_1, a_2, ..., a_n]^T")]
+        public VectorValue Transpose => Kind == VectorKind.Row
             ? Vector.Column(Entries.ToArray())
             : Vector.Row(Entries.ToArray());
         #endregion
@@ -91,9 +93,7 @@ namespace SciNet.Mathematics
         #endregion
     }
 
-    #region Metadata
-    // TODO: Make a prototype attribute that captures different constraints to validate
-    [Description("Represents the diffent possible kinds of vector, i.e. row and column")]
+    [ValuePropertyOption(typeof(VectorValue), "Represents the different possible kinds of vector, i.e. row and column")]
     public enum VectorKind
     {
         [Description("A row of values, as in [a_1, a_2, ... a_n]")]
@@ -103,7 +103,7 @@ namespace SciNet.Mathematics
         Column = 0x2
     }
 
-    [Description("Speak kinds of vectors, e.g. random vectors and zero vectors")]
+    [ValuePrototype(typeof(VectorValue), "Special kinds of vectors, e.g. random vectors and zero vectors")]
     public enum VectorPrototype
     {
         [Description("A vector with all zero values")]
@@ -112,5 +112,4 @@ namespace SciNet.Mathematics
         [Description("A vector with random values in the range (0, 1)")]
         Random
     }
-    #endregion
 }
