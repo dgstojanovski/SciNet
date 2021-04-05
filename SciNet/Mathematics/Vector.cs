@@ -9,42 +9,60 @@ namespace SciNet.Mathematics
     public static class Vector
     {
         #region Public
-        [FactoryMethod(typeof(VectorValue), "Create a new row vector with the provided values")]
-        public static VectorValue Row(params object[] entries) =>
-           new(VectorKind.Row, entries.Select(Convert.ToDecimal));
-
+        [FactoryMethod(typeof(VectorValue), "Create a new row vector with the provided integer values")]
+        public static VectorValue Row(params long[] entries) =>
+            new(VectorKind.Row, entries.Select(Real.Integer));
+        
+        [FactoryMethod(typeof(VectorValue), "Create a new row vector with the provided decimal values")]
+        public static VectorValue Row(params decimal[] entries) =>
+           new(VectorKind.Row, entries.Select(Real.Decimal));
+        
+        [FactoryMethod(typeof(VectorValue), "Create a new row vector with the provided double values")]
+        public static VectorValue Row(params double[] entries) =>
+            new(VectorKind.Row, entries.Select(Real.Decimal));
+        
+        [FactoryMethod(typeof(VectorValue), "Create a new row vector with the provided double values")]
+        public static VectorValue Row(params RealValue[] entries) =>
+            new(VectorKind.Row, entries);
+        
         [FactoryMethod(typeof(VectorValue), "Create a new row vector with a specified length and prototype")]
         public static VectorValue Row(VectorPrototype prototype, int length) =>
           GetPrototype(VectorKind.Row, prototype, length);
 
+        [FactoryMethod(typeof(VectorValue), "Create a new column vector with the provided integer values")]
+        public static VectorValue Column(params long[] entries) =>
+            new(VectorKind.Column, entries.Select(Real.Integer));
+        
+        [FactoryMethod(typeof(VectorValue), "Create a new column vector with the provided double values")]
+        public static VectorValue Column(params double[] entries) =>
+            new(VectorKind.Column, entries.Select(Real.Decimal));
+        
+        [FactoryMethod(typeof(VectorValue), "Create a new column vector with the provided decimal values")]
+        public static VectorValue Column(params decimal[] entries) =>
+            new(VectorKind.Column, entries.Select(Real.Decimal));
+        
         [FactoryMethod(typeof(VectorValue), "Create a new column vector with the provided values")]
-        public static VectorValue Column(params object[] entries) =>
-            new(VectorKind.Column, entries.Select(Convert.ToDecimal));
+        public static VectorValue Column(params RealValue[] entries) =>
+            new(VectorKind.Column, entries);
 
         [FactoryMethod(typeof(VectorValue), "Create a new column vector with a specified length and prototype")]
         public static VectorValue Column(VectorPrototype prototype, int length) =>
            GetPrototype(VectorKind.Column, prototype, length);
-
-        [FactoryMethod(typeof(VectorValue), "Creates a zero vector with the specified orientation and length")]
-        public static VectorValue Zero(VectorKind kind, int length) =>
-            new(kind, Enumerable.Repeat<decimal>(0, length));
-
-        [FactoryMethod(typeof(VectorValue), "Creates a random vector with the specified orientation and length")]
-        public static VectorValue Random(VectorKind kind, int length) =>
-            new(kind, Enumerable.Repeat<decimal>(0, length).Select(_ => Convert.ToDecimal(_random.NextDouble())));
         #endregion
-
-        #region Internal
-        internal static VectorValue GetPrototype(VectorKind kind, VectorPrototype prototype, int length) => length <= 0
+        
+        #region Private
+        private static VectorValue GetPrototype(VectorKind kind, VectorPrototype prototype, int length) => length <= 0
             ? throw new ArgumentException("Length must be greater than 0", nameof(length))
             : prototype switch
             {
-                VectorPrototype.Zero => Zero(kind, length),
-                VectorPrototype.Random => Random(kind, length),
+                VectorPrototype.Zero => 
+                    new VectorValue(kind, Enumerable.Repeat(Real.Zero, length)),
+                VectorPrototype.Random => 
+                    new VectorValue(kind, Enumerable.Repeat(Real.Zero, length).Select(_ => Real.Decimal(_random.NextDouble()))),
                 _ => throw new NotImplementedException($"No prototype generator exists for the vector prototype '{prototype}'")
             };
 
-        internal static readonly Random _random = new();
+        private static readonly Random _random = new();
         #endregion
     }
 
@@ -56,10 +74,12 @@ namespace SciNet.Mathematics
         public VectorKind Kind { get; }
 
         [ValueTypeProperty(typeof(VectorValue), "The underlying decimal array representing this vector")]
-        public IReadOnlyList<decimal> Entries { get; }
+        public IReadOnlyList<RealValue> Entries { get; }
 
         [ValueTypeProperty(typeof(VectorValue), "The number of entries in this vector")]
         public int Length { get; }
+
+        public RealValue this[int i] => Entries[i];
 
         public override string ToString() => string.Concat($"[{string.Join(", ", Entries)}]", Kind == VectorKind.Column ? "^T" : string.Empty);
 
@@ -70,7 +90,7 @@ namespace SciNet.Mathematics
         #endregion
 
         #region Internal
-        internal VectorValue(VectorKind kind, IEnumerable<decimal> entries)
+        internal VectorValue(VectorKind kind, IEnumerable<RealValue> entries)
         {
             Kind = kind;
             Entries = entries.ToArray();
