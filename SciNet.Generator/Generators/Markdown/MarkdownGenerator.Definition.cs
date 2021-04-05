@@ -5,11 +5,11 @@ using System.Linq;
 using System.Reflection;
 using SciNet.Core;
 using SciNet.Core.Attributes;
-using static SciNet.Generator.Generators.DocumentationGenerator;
+using static SciNet.Generator.Generators.Markdown.MarkdownGenerator;
 
-namespace SciNet.Generator.Generators
+namespace SciNet.Generator.Generators.Markdown
 {
-    public class DefinitionDocumentationGenerator : IGenerator<DefinitionAttribute>
+    public class DefinitionMarkdownGenerator : IGenerator<DefinitionAttribute>
     {
         public IEnumerable<FileInfo> Generate(Type type, DirectoryInfo destination)
         {
@@ -46,7 +46,7 @@ namespace SciNet.Generator.Generators
                 writer.WriteLine(meta.Description);
             }
             
-            writer.WriteSection(PropertiesSecton);
+            writer.WriteSection(PropertiesSection);
             foreach (var definition in properties)
             {
                 var (property, meta) = definition;

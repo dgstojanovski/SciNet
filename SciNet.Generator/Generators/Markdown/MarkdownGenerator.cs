@@ -1,9 +1,8 @@
 ﻿using System.IO;
-using SciNet.Core;
 
-namespace SciNet.Generator.Generators
+namespace SciNet.Generator.Generators.Markdown
 {
-    public static class DocumentationGenerator
+    public static class MarkdownGenerator
     {
         public const string OutputFolder = "Documentation";
         
@@ -13,7 +12,7 @@ namespace SciNet.Generator.Generators
         
         public const string MethodsSection = "Methods";
 
-        public const string PropertiesSecton = "Properties";
+        public const string PropertiesSection = "Properties";
 
         public static void WriteChapter(this StreamWriter writer, string text)
         {
