@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using SciNet;
+using SciNet.Core;
 
 namespace SciNet.Generator
 {
@@ -130,16 +132,5 @@ namespace SciNet.Generator
             
             return new FileInfo(path);
         }
-    }
-    
-    [AttributeUsage(AttributeTargets.Method)]
-    internal sealed class GeneratorAttribute : Attribute
-    {
-        public GeneratorAttribute(params Type[] targetTypes)
-        {
-            TargetTypes = targetTypes;
-        }
-
-        public Type[] TargetTypes { get; }
     }
 }

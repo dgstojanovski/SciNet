@@ -1,8 +1,8 @@
 ﻿using Xunit;
 using Xunit.Abstractions;
 using SciNet.Mathematics;
-using static SciNet.Mathematics.Complex;
 using static SciNet.Mathematics.Real;
+using static SciNet.Mathematics.Complex;
 
 namespace SciNet.Tests.Mathematics
 {

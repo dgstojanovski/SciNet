@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Linq;
 using Xunit;
 using SciNet.Mathematics;
+using Xunit.Abstractions;
 using static SciNet.Mathematics.Real;
-using static SciNet.Mathematics.Vector;
+using static SciNet.Mathematics.Complex;
 
 namespace SciNet.Tests.Mathematics
 {
@@ -21,9 +21,8 @@ namespace SciNet.Tests.Mathematics
         [InlineData(2.0, 2.0)]
         public void Factory_Vector_Row_Positive_Double(params double[] values)
         {
-            var vector = Row(values);
+            var vector = Vector.Row(values);
             Assert.Equal(values.Length, vector.Length);
-            Assert.Equal(values.Length, vector.Entries.Count);
             for (var i = 0; i < values.Length; i++)
             {
                 Assert.True(values[i] == vector[i]);
@@ -42,9 +41,54 @@ namespace SciNet.Tests.Mathematics
         [InlineData(2L, 2L)]
         public void Factory_Vector_Row_Positive_Integer(params long[] values)
         {
-            var vector = Row(values);
+            var vector = Vector.Row(values);
+            
+            DumpVectorValue(vector);
+            
             Assert.Equal(values.Length, vector.Length);
-            Assert.Equal(values.Length, vector.Entries.Count);
+            for (var i = 0; i < values.Length; i++)
+            {
+                Assert.True(values[i] == vector[i]);
+            }
+        }
+        
+        [Theory]
+        [InlineData(-2.0, -1.0)]
+        [InlineData(-1.0, -2.0)]
+        [InlineData(-2.0)]
+        [InlineData(-1.0)]
+        [InlineData(0.0)]
+        [InlineData(1.0)]
+        [InlineData(2.0)]
+        [InlineData(1.0, 2.0)]
+        [InlineData(2.0, 2.0)]
+        public void Factory_Vector_Column_Positive_Double(params double[] values)
+        {
+            var vector = Vector.Column(values);
+            Assert.Equal(values.Length, vector.Length);
+            for (var i = 0; i < values.Length; i++)
+            {
+                Assert.True(values[i] == vector[i]);
+            }
+        }
+        
+        [Theory]
+        [InlineData(-2L, -1L)]
+        [InlineData(-1L, -2L)]
+        [InlineData(-2L)]
+        [InlineData(-1L)]
+        [InlineData(0L)]
+        [InlineData(1L)]
+        [InlineData(2L)]
+        [InlineData(1L, 2L)]
+        [InlineData(2L, 2L)]
+        public void Factory_Vector_Column_Positive_Integer(params long[] values)
+        {
+            var vector = Vector.Column(values);
+            
+            DumpVectorValue(vector);
+            
+            Assert.Equal(values.Length, vector.Length);
             for (var i = 0; i < values.Length; i++)
             {
                 Assert.True(values[i] == vector[i]);
@@ -52,45 +96,74 @@ namespace SciNet.Tests.Mathematics
         }
 
         [Theory]
-        [InlineData(VectorPrototype.Zero, 1)]
-        [InlineData(VectorPrototype.Zero, 2)]
-        [InlineData(VectorPrototype.Zero, short.MaxValue)]
-        public void Factory_Vector_Row_Prototype_Zero_Positive(VectorPrototype prototype, int length)
+        [InlineData(1, Vector.Types.Row)]
+        [InlineData(1, Vector.Types.Column)]
+        [InlineData(2, Vector.Types.Row)]
+        [InlineData(2, Vector.Types.Column)]
+        [InlineData(short.MaxValue, Vector.Types.Row)]
+        [InlineData(short.MaxValue, Vector.Types.Column)]
+        public void Factory_Vector_Zero_Positive(int length, Vector.Types type)
         {
-            var vector = Row(prototype, length);
+            var vector = Vector.Zero(length, type);
+            
+            DumpVectorValue(vector);
+            
             Assert.Equal(length, vector.Length);
-            Assert.Equal(length, vector.Entries.Count);
-            Assert.True(vector.Entries.All(e => e == Zero));
         }
 
         [Theory]
-        [InlineData(VectorPrototype.Zero, -1)]
-        [InlineData(VectorPrototype.Zero, 0)]
-        [InlineData(VectorPrototype.Zero, short.MinValue)]
-        public void Factory_Vector_Row_Prototype_Zero_Negative(VectorPrototype prototype, int length)
+        [InlineData(int.MinValue, Vector.Types.Row)]
+        [InlineData(int.MinValue, Vector.Types.Column)]
+        [InlineData(-1, Vector.Types.Row)]
+        [InlineData(-1, Vector.Types.Column)]
+        [InlineData(0, Vector.Types.Row)]
+        [InlineData(0, Vector.Types.Column)]
+        public void Factory_Vector_Zero_Negative(int length, Vector.Types type)
         {
-            Assert.Throws<ArgumentException>(() => Row(prototype, length));
+            Assert.Throws<ArgumentException>(() => Vector.Zero(length, type));
         }
         
         [Theory]
-        [InlineData(VectorPrototype.Random, 1)]
-        [InlineData(VectorPrototype.Random, 2)]
-        [InlineData(VectorPrototype.Random, short.MaxValue)]
-        public void Factory_Vector_Row_Prototype_Random_Positive(VectorPrototype prototype, int length)
+        [InlineData(1, Vector.Types.Row)]
+        [InlineData(1, Vector.Types.Column)]
+        [InlineData(2, Vector.Types.Row)]
+        [InlineData(2, Vector.Types.Column)]
+        [InlineData(short.MaxValue, Vector.Types.Row)]
+        [InlineData(short.MaxValue, Vector.Types.Column)]
+        public void Factory_Vector_Random_Positive(int length, Vector.Types type)
         {
-            var vector = Row(prototype, length);
+            var vector = Vector.Random(length, type);
+            
+            DumpVectorValue(vector);
+            
             Assert.Equal(length, vector.Length);
-            Assert.Equal(length, vector.Entries.Count);
-            Assert.True(vector.Entries.All(e => e.Value > 0.0 && e.Value < 1.0));
+        }
+
+        [Theory]
+        [InlineData(int.MinValue, Vector.Types.Row)]
+        [InlineData(int.MinValue, Vector.Types.Column)]
+        [InlineData(-1, Vector.Types.Row)]
+        [InlineData(-1, Vector.Types.Column)]
+        [InlineData(0, Vector.Types.Row)]
+        [InlineData(0, Vector.Types.Column)]
+        public void Factory_Vector_Random_Negative(int length, Vector.Types type)
+        {
+            Assert.Throws<ArgumentException>(() => Vector.Random(length, type));
         }
         
-        [Theory]
-        [InlineData(VectorPrototype.Random, -1)]
-        [InlineData(VectorPrototype.Random, 0)]
-        [InlineData(VectorPrototype.Random, short.MinValue)]
-        public void Factory_Vector_Row_Prototype_Random_Negative(VectorPrototype prototype, int length)
+        private readonly ITestOutputHelper _output;
+
+        public VectorUnitTests(ITestOutputHelper output)
         {
-            Assert.Throws<ArgumentException>(() => Row(prototype, length));
+            _output = output;
+        }
+        
+        private void DumpVectorValue(VectorValue value)
+        {
+            _output.WriteLine($"Value: {value}");
+            _output.WriteLine($"Length: {value.Length}");
+            _output.WriteLine($"Transpose: {value.Transpose}");
+            _output.WriteLine($"Type: {value.Type}");
         }
     }
 }

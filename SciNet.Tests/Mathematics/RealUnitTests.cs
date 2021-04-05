@@ -3,6 +3,7 @@ using Xunit;
 using SciNet.Mathematics;
 using Xunit.Abstractions;
 using static SciNet.Mathematics.Real;
+using static SciNet.Mathematics.Complex;
 
 namespace SciNet.Tests.Mathematics
 {
@@ -32,8 +33,8 @@ namespace SciNet.Tests.Mathematics
         [InlineData(2)]
         [InlineData(2.0)]
         [InlineData(3.14159)]
-        [InlineData(long.MaxValue)]
-        [InlineData(long.MinValue)]
+        [InlineData(int.MaxValue)]
+        [InlineData(int.MinValue)]
         public void Factory_Decimal_Positive(decimal value)
         {
             var real = Decimal(Convert.ToDouble(value));
@@ -54,8 +55,8 @@ namespace SciNet.Tests.Mathematics
         [InlineData(2)]
         [InlineData(2.0)]
         [InlineData(3.14159)]
-        [InlineData(long.MaxValue)]
-        [InlineData(long.MinValue)]
+        [InlineData(int.MaxValue)]
+        [InlineData(int.MinValue)]
         public void Factory_Double_Positive(double value)
         {
             var real = Decimal(value);
