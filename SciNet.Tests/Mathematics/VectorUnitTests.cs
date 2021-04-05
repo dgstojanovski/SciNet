@@ -28,12 +28,9 @@ namespace SciNet.Tests.Mathematics
         {
             var vector = Row(values);
             Assert.Equal(values.Length, vector.Length);
-            for (var i = 0; i < values.Length; i++)
-            {
-                Assert.True(values[i] == vector[i]);
-            }
+            for (var i = 0; i < values.Length; i++) Assert.True(values[i] == vector[i]);
         }
-        
+
         [Theory]
         [InlineData(-2L, -1L)]
         [InlineData(-1L, -2L)]
@@ -47,16 +44,14 @@ namespace SciNet.Tests.Mathematics
         public void Factory_Vector_Row_Positive_Integer(params long[] values)
         {
             var vector = Row(values);
-            
-             _output.WriteLine(vector.ToJson(true));;
-            
+
+            _output.WriteLine(vector.ToJson(true));
+            ;
+
             Assert.Equal(values.Length, vector.Length);
-            for (var i = 0; i < values.Length; i++)
-            {
-                Assert.True(values[i] == vector[i]);
-            }
+            for (var i = 0; i < values.Length; i++) Assert.True(values[i] == vector[i]);
         }
-        
+
         [Theory]
         [InlineData(-2.0, -1.0)]
         [InlineData(-1.0, -2.0)]
@@ -71,12 +66,9 @@ namespace SciNet.Tests.Mathematics
         {
             var vector = Column(values);
             Assert.Equal(values.Length, vector.Length);
-            for (var i = 0; i < values.Length; i++)
-            {
-                Assert.True(values[i] == vector[i]);
-            }
+            for (var i = 0; i < values.Length; i++) Assert.True(values[i] == vector[i]);
         }
-        
+
         [Theory]
         [InlineData(-2L, -1L)]
         [InlineData(-1L, -2L)]
@@ -90,14 +82,12 @@ namespace SciNet.Tests.Mathematics
         public void Factory_Vector_Column_Positive_Integer(params long[] values)
         {
             var vector = Column(values);
-            
-             _output.WriteLine(vector.ToJson(true));;
-            
+
+            _output.WriteLine(vector.ToJson(true));
+            ;
+
             Assert.Equal(values.Length, vector.Length);
-            for (var i = 0; i < values.Length; i++)
-            {
-                Assert.True(values[i] == vector[i]);
-            }
+            for (var i = 0; i < values.Length; i++) Assert.True(values[i] == vector[i]);
         }
 
         [Theory]
@@ -110,9 +100,10 @@ namespace SciNet.Tests.Mathematics
         public void Factory_Vector_Zero_Positive(int length, Types type)
         {
             var vector = Zero(length, type);
-            
-             _output.WriteLine(vector.ToJson(true));;
-            
+
+            _output.WriteLine(vector.ToJson(true));
+            ;
+
             Assert.Equal(length, vector.Length);
         }
 
@@ -127,7 +118,7 @@ namespace SciNet.Tests.Mathematics
         {
             Assert.Throws<ArgumentException>(() => Zero(length, type));
         }
-        
+
         [Theory]
         [InlineData(1, Types.Row)]
         [InlineData(1, Types.Column)]
@@ -138,9 +129,10 @@ namespace SciNet.Tests.Mathematics
         public void Factory_Vector_Random_Positive(int length, Types type)
         {
             var vector = Random(length, type);
-            
-             _output.WriteLine(vector.ToJson(true));;
-            
+
+            _output.WriteLine(vector.ToJson(true));
+            ;
+
             Assert.Equal(length, vector.Length);
         }
 

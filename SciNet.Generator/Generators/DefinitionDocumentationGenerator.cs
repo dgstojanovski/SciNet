@@ -14,11 +14,11 @@ namespace SciNet.Generator.Generators
                 .CreateSubdirectory(DocumentationGenerator.Directory);
 
             var path = Path.Combine(directory.FullName, $"{type.Name}.md");
-            
+
             using var writer = File.CreateText(path);
             writer.WriteLine($"# {type.FullName}");
-            
-            return new[] { new FileInfo(path) };
+
+            return new[] {new FileInfo(path)};
         }
     }
 }

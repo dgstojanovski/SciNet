@@ -5,10 +5,6 @@ namespace SciNet.Core.Attributes
     [AttributeUsage(AttributeTargets.Enum)]
     public sealed class OptionAttribute : Attribute
     {
-        public Type ValueType { get; }
-
-        public string Description { get; }
-
         public OptionAttribute(Type valueType, string description)
         {
             ValueType = valueType.IsValueType
@@ -19,5 +15,9 @@ namespace SciNet.Core.Attributes
                 ? description
                 : throw new ArgumentException("A non-empty description must be provided", nameof(description));
         }
+
+        public Type ValueType { get; }
+
+        public string Description { get; }
     }
 }

@@ -13,7 +13,7 @@ namespace SciNet.Tests.Mathematics
         {
             _output = output;
         }
-        
+
         [Theory]
         [InlineData(-1)]
         [InlineData(0)]
@@ -27,7 +27,7 @@ namespace SciNet.Tests.Mathematics
             Assert.True(real == value);
             Assert.True(value == real);
         }
-        
+
         [Theory]
         [InlineData(-1)]
         [InlineData(-1.0)]
@@ -49,7 +49,7 @@ namespace SciNet.Tests.Mathematics
             Assert.True(real == value);
             Assert.True(value == real);
         }
-        
+
         [Theory]
         [InlineData(-1)]
         [InlineData(-1.0)]
@@ -65,9 +65,9 @@ namespace SciNet.Tests.Mathematics
         public void Factory_Double_Positive(double value)
         {
             var real = Decimal(value);
-            
-             _output.WriteLine(real.ToJson(true));
-            
+
+            _output.WriteLine(real.ToJson(true));
+
             Assert.True(real == value);
             Assert.True(value == real);
         }
