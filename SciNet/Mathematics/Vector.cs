@@ -13,10 +13,6 @@ namespace SciNet.Mathematics
         public static VectorValue Row(params long[] entries) =>
             new(VectorKind.Row, entries.Select(Real.Integer));
         
-        [FactoryMethod(typeof(VectorValue), "Create a new row vector with the provided decimal values")]
-        public static VectorValue Row(params decimal[] entries) =>
-           new(VectorKind.Row, entries.Select(Real.Decimal));
-        
         [FactoryMethod(typeof(VectorValue), "Create a new row vector with the provided double values")]
         public static VectorValue Row(params double[] entries) =>
             new(VectorKind.Row, entries.Select(Real.Decimal));
@@ -35,10 +31,6 @@ namespace SciNet.Mathematics
         
         [FactoryMethod(typeof(VectorValue), "Create a new column vector with the provided double values")]
         public static VectorValue Column(params double[] entries) =>
-            new(VectorKind.Column, entries.Select(Real.Decimal));
-        
-        [FactoryMethod(typeof(VectorValue), "Create a new column vector with the provided decimal values")]
-        public static VectorValue Column(params decimal[] entries) =>
             new(VectorKind.Column, entries.Select(Real.Decimal));
         
         [FactoryMethod(typeof(VectorValue), "Create a new column vector with the provided values")]

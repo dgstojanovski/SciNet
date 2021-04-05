@@ -40,7 +40,7 @@ namespace SciNet.Tests.Mathematics
         [InlineData(2.0, 2.0)]
         public void Factory_Vector_Row_Positive_Decimal(params double[] values)
         {
-            var vector = Vector.Row(values.Select(Convert.ToDecimal).ToArray());
+            var vector = Vector.Row(values.Select(Convert.ToDouble).ToArray());
             Assert.Equal(values.Length, vector.Length);
             Assert.Equal(values.Length, vector.Entries.Count);
             for (var i = 0; i < values.Length; i++)
@@ -100,7 +100,7 @@ namespace SciNet.Tests.Mathematics
             var vector = Vector.Row(prototype, length);
             Assert.Equal(length, vector.Length);
             Assert.Equal(length, vector.Entries.Count);
-            Assert.True(vector.Entries.All(e => e.Value > 0.0m && e.Value < 1.0m));
+            Assert.True(vector.Entries.All(e => e.Value > 0.0 && e.Value < 1.0));
         }
         
         [Theory]

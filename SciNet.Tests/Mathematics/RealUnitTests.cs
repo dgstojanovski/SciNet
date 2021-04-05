@@ -1,5 +1,7 @@
-﻿using Xunit;
-using SciNet.Mathematics;
+﻿using System;
+using Xunit;
+using static SciNet.Mathematics.Real;
+using static SciNet.Mathematics.Complex;
 
 namespace SciNet.Tests.Mathematics
 {
@@ -14,7 +16,7 @@ namespace SciNet.Tests.Mathematics
         [InlineData(long.MinValue)]
         public void Factory_Integer_Positive(long value)
         {
-            var real = Real.Integer(value);
+            var real = Integer(value);
             Assert.True(real == value);
             Assert.True(value == real);
         }
@@ -33,7 +35,7 @@ namespace SciNet.Tests.Mathematics
         [InlineData(long.MinValue)]
         public void Factory_Decimal_Positive(decimal value)
         {
-            var real = Real.Decimal(value);
+            var real = Decimal(Convert.ToDouble(value));
             Assert.True(real == value);
             Assert.True(value == real);
         }
@@ -52,7 +54,7 @@ namespace SciNet.Tests.Mathematics
         [InlineData(long.MinValue)]
         public void Factory_Double_Positive(double value)
         {
-            var real = Real.Decimal(value);
+            var real = Decimal(value);
             Assert.True(real == value);
             Assert.True(value == real);
         }
