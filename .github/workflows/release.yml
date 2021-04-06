@@ -39,3 +39,9 @@ jobs:
     - name: Generate NuGet package
       id: pack
       run: dotnet pack SciNet --no-build -c $configuration --version-suffix $suffix --output $output
+    - name: Upload NuGet
+      id: upload-nuget
+      uses: actions/upload-artifact@v2
+      with:
+        name: package
+        path: output/**.nupkg
