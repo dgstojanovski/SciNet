@@ -18,7 +18,7 @@ jobs:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         
-    - id: candidate-release
+    - id: candidate-generate
       name: Generate release artifacts
       uses: ./.github/actions/generate-release
       with:
@@ -28,3 +28,10 @@ jobs:
         prerelease: true
         source: github
         key: ${{ secrets.GITHUB_TOKEN }}
+        
+    - id: candidate-documentation
+      name: Upload generated documentgation
+      uses: actions/upload-artifact@v2
+      with:
+        name: documentation
+        path: output/Documentation/

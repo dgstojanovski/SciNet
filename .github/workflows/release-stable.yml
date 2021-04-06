@@ -11,7 +11,7 @@ jobs:
       name: Checkout tag commit
       uses: actions/checkout@v2
       
-    - id: stable-release
+    - id: stable-generate
       name: Generate release artifacts
       uses: ./.github/actions/generate-release
       with:
@@ -20,3 +20,10 @@ jobs:
         prerelease: false
         source: github
         key: ${{ secrets.GITHUB_TOKEN }}
+        
+    - id: stable-documentation
+      name: Upload generated documentgation
+      uses: actions/upload-artifact@v2
+      with:
+        name: documentation
+        path: output/Documentation/

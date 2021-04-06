@@ -32,7 +32,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    
     - id: dotnet-restore
       name: 'Restore NuGet dependencies for solution'
       run: dotnet restore $arguments
@@ -70,16 +69,12 @@ runs:
         project: ${{ inputs.name }}
         release: ${{ format('{0}{1}', inputs.version, inputs.suffix) }}
         arguments: ${{ format('-c {0} -o {1} --no-build', inputs.configuration, inputs.output) }}
+        
     - id: dotnet-nuget-push
       name: 'Push core NuGet package'
       run: dotnet nuget push $package $arguments
+      shell: bash
       env:
         package: ${{ format('{0}/{1}.{2}{3}.nupkg', inputs.output, inputs.name, inputs.version, inputs.suffix) }}
         arguments: ${{ format('--source {0} --api-key {1}', inputs.source, inputs.key) }}
         
-    - id: upload-documentation
-      name: 'Upload Documentation'
-      uses: actions/upload-artifact@v2
-      with:
-        name: documentation
-        path: output/Documentation/
