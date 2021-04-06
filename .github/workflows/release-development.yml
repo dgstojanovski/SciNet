@@ -6,6 +6,9 @@ jobs:
   generate:
     name: Generate Development Release
     runs-on: ubuntu-latest
+    env:
+      prefix: 0.1.0
+      tag: development
     steps:
     - id: development-checkout
       name: Checkout latest develop commit
@@ -28,9 +31,20 @@ jobs:
       name: Generate release artifacts
       uses: ./.github/actions/generate-release
       with:
-        name: SciNet
-        version: 0.1.0
-        suffix: ${{ format('-development.{0}', github.run_number) }}
         prerelease: true
+        name: SciNet
+        version: ${{ env.prefix }}
+        suffix: ${{ format('-{0}.{1}', env.tag, github.run_number) }}
         source: github
         key: ${{ secrets.GITHUB_TOKEN }}
+        
+    - id: development-release
+      name: Create GitHub release
+      uses: ncipollo/release-action@v1
+      env:
+        release: ${{ format('{0}{1}.{0}', env.prefix, env.tag, github.run_number) }}
+      with:
+        prerelease: true
+        name: ${{ env.release }}
+        tag: ${{ env.release }}
+        token: ${{ secrets.GITHUB_TOKEN }}
