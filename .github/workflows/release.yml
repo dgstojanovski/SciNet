@@ -26,11 +26,10 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
     - name: Restore dependencies
       id: restore
-      if: steps.cache.outputs.cache-hit != 'true'
       run: dotnet restore --use-lock-file --packages ~/.nuget/packages
     - name: Build solution
       id: build
-      run: dotnet build -c $configuration --no-restore
+      run: dotnet build --no-restore -c $configuration
     - name: Test solution
       id: test
       run: dotnet test --no-build -c $configuration --verbosity normal
