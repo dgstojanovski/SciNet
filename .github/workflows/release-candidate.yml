@@ -11,6 +11,12 @@ jobs:
       name: Checkout latest master commit
       uses: actions/checkout@v2
       
+    - id: candidate-setup
+      name: Configure .NET build tools
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+      
     - id: candidate-cache
       name: Download cached NuGet packages
       uses: actions/cache@v2.1.4
