@@ -37,7 +37,8 @@ runs:
       run: dotnet restore $arguments
       shell: bash
       env:
-        arguments: '--use-lock-file --packages ~/.nuget/packages --source nuget --configfile NuGet.config'
+        arguments: '--use-lock-file --packages ~/.nuget/packages'
+        NUGET_KEY: ${{ inputs.Key }}
         
     - id: dotnet-build
       name: 'Build solution'
