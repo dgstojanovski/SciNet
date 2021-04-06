@@ -1,0 +1,21 @@
+name: Stable Release
+on:
+  push:
+    tags: [ '*.*.*' ]
+jobs:
+  generate:
+    name: Generate Stable Release
+    runs-on: ubuntu-latest
+    steps:
+    - id: stable-checkout
+      name: Checkout latest master commit
+      uses: actions/checkout@v2
+    - id: stable-release
+      name: Generate stable release
+      uses: .github/actions/generate-release
+      with:
+        name: SciNet
+        version: ${{ github.ref }}
+        prerelease: false
+        source: github
+        key: ${{ secrets.GITHUB_TOKEN }}

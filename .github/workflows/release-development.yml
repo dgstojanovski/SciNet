@@ -1,0 +1,22 @@
+name: Development Release
+on:
+  push:
+    branches: [ develop ]
+jobs:
+  generate:
+    name: Generate Development Release
+    runs-on: ubuntu-latest
+    steps:
+    - id: development-checkout
+      name: Checkout latest master commit
+      uses: actions/checkout@v2
+    - id: development-release
+      name: Generate stable release
+      uses: .github/actions/generate-release
+      with:
+        name: SciNet
+        version: 0.1.0
+        suffix: ${{ format('-development.{0}', github.run_number) }}
+        prerelease: true
+        source: github
+        key: ${{ secrets.GITHUB_TOKEN }}

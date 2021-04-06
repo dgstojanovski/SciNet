@@ -1,0 +1,22 @@
+name: Candidate Release
+on:
+  push:
+    branches: [ master ]
+jobs:
+  generate:
+    name: Generate Candidate Release
+    runs-on: ubuntu-latest
+    steps:
+    - id: candidate-checkout
+      name: Checkout latest master commit
+      uses: actions/checkout@v2
+    - id: candidate-release
+      name: Generate prerelease with tag 'rc'
+      uses: .github/actions/generate-release
+      with:
+        name: SciNet
+        version: 0.1.0
+        suffix: ${{ format('-rc.{0}', github.run_number) }}
+        prerelease: true
+        source: github
+        key: ${{ secrets.GITHUB_TOKEN }}

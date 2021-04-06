@@ -10,11 +10,24 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E7C69A03-0978-46CB-B35B-09DD4E8084F8}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		.github\workflows\release.yml = .github\workflows\release.yml
 		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SciNet.Generator", "SciNet.Generator\SciNet.Generator.csproj", "{E1380E97-BBBE-403F-BCAD-BC5F67D88668}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{7A7A64F5-6EAF-403C-8D04-DA30CF1CDE51}"
+ProjectSection(SolutionItems) = preProject
+	.github\workflows\release-candidate.yml = .github\workflows\release-candidate.yml
+	.github\workflows\release-development.yml = .github\workflows\release-development.yml
+	.github\workflows\release-stable.yml = .github\workflows\release-stable.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{3BD5098B-D4AD-42E7-BFA1-97FDB7BFED5B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generate", "Generate", "{5D21626D-4ED1-4CBE-A4F0-17FBBF02FF62}"
+ProjectSection(SolutionItems) = preProject
+	.github\actions\generate-release\action.yml = .github\actions\generate-release\action.yml
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,5 +53,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B971EF8C-4DC0-440A-AC92-96833C4172E0}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7A7A64F5-6EAF-403C-8D04-DA30CF1CDE51} = {E7C69A03-0978-46CB-B35B-09DD4E8084F8}
+		{3BD5098B-D4AD-42E7-BFA1-97FDB7BFED5B} = {E7C69A03-0978-46CB-B35B-09DD4E8084F8}
+		{5D21626D-4ED1-4CBE-A4F0-17FBBF02FF62} = {3BD5098B-D4AD-42E7-BFA1-97FDB7BFED5B}
 	EndGlobalSection
 EndGlobal

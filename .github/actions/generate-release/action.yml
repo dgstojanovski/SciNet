@@ -1,0 +1,93 @@
+name: Generate Release
+description: Generates all release artifacts and publishes the client packages to a NuGet feed
+
+inputs:
+  name:
+    description: The root namespace for generated packages
+    required: true
+  prerelease:
+    description: When set to true, creates a draft release and appends a prerelease suffix to package versions
+    required: true
+  version:
+    description: The semantic version of this release in the format x.y.z where x, y, and z are integers
+    required: true
+  source:
+    description: The NuGet package source to use when pushing generated packages
+    required: true
+  key:
+    description: The NuGet API to use when pushing generated packages
+    required: true
+  suffix:
+    description: The suffix to append to the package versions if this is a prerelease version
+    required: false
+    default: ''
+  configuration:
+    description: The build configuration (Debug or Release) to use when building the solution
+    required: true
+    default: 'Release'
+  output:
+    description: 'The base directory to use for all generated artifacts'
+    required: true
+    default: 'output'
+
+runs:
+  using: "composite"
+  steps:
+    - id: dotnet-setup
+      name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    
+    - id: dotnet-cache
+      name: Download cached NuGet packages
+      uses: actions/cache@v2.1.4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+    
+    - id: dotnet-restore
+      name: Restore NuGet dependencies for solution
+      run: dotnet restore $arguments
+        arguments: --use-lock-file --packages ~/.nuget/packages
+
+    - id: dotnet-build
+      name: Build solution
+      run: dotnet build $arguments
+      env:
+        arguments: ${{ format('-c {0} --no-restore', inputs.configuration) }}
+    
+    - id: dotnet-test
+      name: Test solution
+      run: dotnet test $arguments
+      env:
+        arguments: ${{ format('-c {0} --no-build --verbosity normal', inputs.configuration) }}
+    
+    - id: dotnet-run
+      name: Run Generator
+      run: dotnet run --project $project $arguments ${{ inputs.output }}
+      env:
+        project: ${{ format('{0}.Generator', inputs.name) }}
+        arguments: ${{ format('-c {0} -o {1} --no-build', inputs.configuration, inputs.output) }}
+
+    - id: dotnet-pack
+      name: Generate prerelease NuGet package
+      run: dotnet pack $project $arguments -p:PackageVersion=$release
+      env:
+        project: ${{ inputs.name }}
+        release: ${{ format('{0}{1}', inputs.version, inputs.suffix) }}
+        arguments: ${{ format('-c {0} -o {1} --no-build', inputs.configuration, inputs.output) }}
+    
+    - id: dotnet-nuget-push
+      name: Push NuGet package
+      run: dotnet nuget push $package $arguments
+      env:
+        package: ${{ format('{0}/{1}.{2}{3}.nupkg', inputs.output, inputs.name, inputs.version, inputs.suffix) }}
+        arguments: ${{ format('--source {0} --api-key {1}', inputs.source, inputs.key) }}
+        
+    - id: upload-documentation
+      name: Upload Documentation
+      uses: actions/upload-artifact@v2
+      with:
+        name: documentation
+        path: output/Documentation/
