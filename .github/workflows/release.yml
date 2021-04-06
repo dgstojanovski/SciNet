@@ -39,9 +39,15 @@ jobs:
     - name: Generate NuGet package
       id: pack
       run: dotnet pack SciNet --no-build -c $configuration --version-suffix $suffix --output $output
-    - name: Upload NuGet
-      id: upload-nuget
+    - name: Upload NuGet Package
+      id: upload-package
       uses: actions/upload-artifact@v2
       with:
         name: package
-        path: output/**.nupkg
+        path: output/*.nupkg
+    - name: Upload Documentation
+      id: upload-documentation
+      uses: actions/upload-artifact@v2
+      with:
+        name: documentation
+        path: output/Documentation/
