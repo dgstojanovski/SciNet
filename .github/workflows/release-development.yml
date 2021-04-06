@@ -8,11 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - id: development-checkout
-      name: Checkout latest master commit
+      name: Checkout latest develop commit
       uses: actions/checkout@v2
     - id: development-release
-      name: Generate stable release
-      uses: .github/actions/generate-release
+      name: Generate release artifacts
+      uses: ./.github/actions/generate-release
       with:
         name: SciNet
         version: 0.1.0

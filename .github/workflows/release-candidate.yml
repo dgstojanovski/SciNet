@@ -11,8 +11,8 @@ jobs:
       name: Checkout latest master commit
       uses: actions/checkout@v2
     - id: candidate-release
-      name: Generate prerelease with tag 'rc'
-      uses: .github/actions/generate-release
+      name: Generate release artifacts
+      uses: ./.github/actions/generate-release
       with:
         name: SciNet
         version: 0.1.0
