@@ -58,6 +58,6 @@ jobs:
       id: push
       env:
         source: github
-        package: ${{ format('{0}/SciNet.{1}-{2}.nupkg', env.output, env.version, env.suffix }}
+        package: ${{ format('{0}/SciNet.{1}-{2}.nupkg', env.output, env.version, env.suffix) }}
         key: ${{ secrets.GITHUB_TOKEN }}
       run: dotnet nuget push $package --source $source --api-key $key
