@@ -26,10 +26,3 @@ jobs:
         prerelease: false
         source: github
         key: ${{ secrets.GITHUB_TOKEN }}
-        
-    - id: stable-artifact
-      name: Upload generated documentgation
-      uses: actions/upload-artifact@v2
-      with:
-        name: documentation
-        path: output/Documentation/

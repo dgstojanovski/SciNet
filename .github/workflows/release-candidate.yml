@@ -34,10 +34,3 @@ jobs:
         prerelease: true
         source: github
         key: ${{ secrets.GITHUB_TOKEN }}
-        
-    - id: candidate-artifact
-      name: Upload generated documentgation
-      uses: actions/upload-artifact@v2
-      with:
-        name: documentation
-        path: output/Documentation/

@@ -56,11 +56,11 @@ runs:
         
     - id: dotnet-run
       name: 'Run code generators'
-      run: dotnet run --project $project $arguments ${{ inputs.output }}
+      run: dotnet run $arguments --project $project ${{ inputs.output }}
       shell: bash
       env:
         project: ${{ format('{0}.Generator', inputs.name) }}
-        arguments: ${{ format('-c {0} -o {1} --no-build', inputs.configuration, inputs.output) }}
+        arguments: ${{ format('-c {0} --no-build', inputs.configuration) }}
         
     - id: dotnet-pack
       name: 'Generate core NuGet package'
