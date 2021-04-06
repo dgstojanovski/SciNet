@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Cache
+      id: cache
+      uses: actions/cache@v2.1.4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+    - name: Restore dependencies
+      id: restore
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: dotnet restore
+    - name: Build solution
+      id: build
+      run: dotnet build --no-restore
+    - name: Test solution
+      id: test
+      run: dotnet test --no-build --verbosity normal
+    - name: Run Generator
+      id: generate
+      run: dotnet run --no-build --project SciNet.Generator
+      
