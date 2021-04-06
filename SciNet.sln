@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E7C69A03-0978-46CB-B35B-09DD4E8084F8}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SciNet.Generator", "SciNet.Generator\SciNet.Generator.csproj", "{E1380E97-BBBE-403F-BCAD-BC5F67D88668}"
