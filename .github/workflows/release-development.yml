@@ -42,7 +42,7 @@ jobs:
       name: Create GitHub release
       uses: ncipollo/release-action@v1
       env:
-        release: ${{ format('{0}{1}.{0}', env.prefix, env.tag, github.run_number) }}
+        release: ${{ format('{0}-{1}.{2}', env.prefix, env.tag, github.run_number) }}
       with:
         prerelease: true
         name: ${{ env.release }}
