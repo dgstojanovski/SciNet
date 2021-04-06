@@ -7,7 +7,8 @@ jobs:
     env:
       configuration: Release
       output: output
-      suffix: ${{ format('master.{0}', github.run_number) }}
+      version: 0.1.0
+      suffix: ${{ format('rc.{0}', github.run_number) }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout master
@@ -35,10 +36,12 @@ jobs:
       run: dotnet test --no-build -c $configuration --verbosity normal
     - name: Run Generator
       id: run
-      run: dotnet run --no-build --project SciNet.Generator $output
+      run: dotnet run --no-build -c $configuration --project SciNet.Generator $output
     - name: Generate NuGet package
       id: pack
-      run: dotnet pack SciNet --no-build -c $configuration --version-suffix $suffix --output $output
+      env:
+        release: ${{ format('{0}.{0}', env.version, env.suffix) }}
+      run: dotnet pack SciNet --no-build -c $configuration -o $output -p:PackageVersion=$release
     - name: Upload NuGet Package
       id: upload-package
       uses: actions/upload-artifact@v2
