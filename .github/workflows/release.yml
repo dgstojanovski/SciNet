@@ -40,7 +40,7 @@ jobs:
     - name: Generate NuGet package
       id: pack
       env:
-        release: ${{ format('{0}.{0}', env.version, env.suffix) }}
+        release: ${{ format('{0}-{1}', env.version, env.suffix) }}
       run: dotnet pack SciNet --no-build -c $configuration -o $output -p:PackageVersion=$release
     - name: Upload NuGet Package
       id: upload-package
