@@ -37,3 +37,14 @@ jobs:
         suffix: ${{ format('-{0}.{1}', env.tag, github.run_number) }}
         source: github
         key: ${{ secrets.GITHUB_TOKEN }}
+    
+    - id: candidate-release
+      name: Create GitHub release
+      uses: ncipollo/release-action@v1
+      env:
+        release: ${{ format('{0}-{1}.{2}', env.prefix, env.tag, github.run_number) }}
+      with:
+        prerelease: true
+        name: ${{ env.release }}
+        tag: ${{ env.release }}
+        token: ${{ secrets.GITHUB_TOKEN }}
