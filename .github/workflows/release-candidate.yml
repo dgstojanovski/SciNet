@@ -10,6 +10,14 @@ jobs:
     - id: candidate-checkout
       name: Checkout latest master commit
       uses: actions/checkout@v2
+      
+    - id: candidate-cache
+      name: Download cached NuGet packages
+      uses: actions/cache@v2.1.4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        
     - id: candidate-release
       name: Generate release artifacts
       uses: ./.github/actions/generate-release

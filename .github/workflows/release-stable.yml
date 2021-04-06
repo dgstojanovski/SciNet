@@ -10,6 +10,7 @@ jobs:
     - id: stable-checkout
       name: Checkout tag commit
       uses: actions/checkout@v2
+      
     - id: stable-release
       name: Generate release artifacts
       uses: ./.github/actions/generate-release
