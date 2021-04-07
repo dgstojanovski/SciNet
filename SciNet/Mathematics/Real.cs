@@ -1,5 +1,5 @@
-﻿using SciNet.Core;
-using SciNet.Core.Attributes;
+﻿using MetaNet.Core;
+using MetaNet.Core.Attributes;
 
 namespace SciNet.Mathematics
 {

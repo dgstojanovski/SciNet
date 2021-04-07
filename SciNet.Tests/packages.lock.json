@@ -35,6 +35,11 @@
         "resolved": "2.4.3",
         "contentHash": "kZZSmOmKA8OBlAJaquPXnJJLM9RwQ27H7BMVqfMLUcTi9xHinWGJiWksa3D4NEtz0wZ/nxd2mogObvBgJKCRhQ=="
       },
+      "MetaNet": {
+        "type": "Transitive",
+        "resolved": "0.1.0-rc.3",
+        "contentHash": "zZ7N7axhVHNtBB2KbfMSAdhf/Dd2RWIw3s1Dws9adRLSw4dVGCd+aULefQCU3OUl4FPPBvouXUgWMRY8RRw5XA=="
+      },
       "Microsoft.CodeCoverage": {
         "type": "Transitive",
         "resolved": "16.9.1",
@@ -1095,7 +1100,10 @@
         }
       },
       "scinet": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "MetaNet": "0.1.0-rc.3"
+        }
       }
     }
   }

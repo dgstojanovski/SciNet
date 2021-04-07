@@ -2,8 +2,16 @@
   "version": 1,
   "dependencies": {
     ".NETCoreApp,Version=v5.0": {
+      "MetaNet": {
+        "type": "Transitive",
+        "resolved": "0.1.0-rc.3",
+        "contentHash": "zZ7N7axhVHNtBB2KbfMSAdhf/Dd2RWIw3s1Dws9adRLSw4dVGCd+aULefQCU3OUl4FPPBvouXUgWMRY8RRw5XA=="
+      },
       "scinet": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "MetaNet": "0.1.0-rc.3"
+        }
       }
     }
   }

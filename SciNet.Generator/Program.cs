@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using SciNet.Core;
-using SciNet.Core.Attributes;
+using MetaNet.Core;
+using MetaNet.Generators;
+using MetaNet.Core.Attributes;
+using SciNet;
+using SciNet.Mathematics;
 
 namespace SciNet.Generator
 {
@@ -14,6 +17,9 @@ namespace SciNet.Generator
 
         public static void Main(string[] args)
         {
+            // Because lazy loading
+            Vector.Random(10);
+
             _working = new DirectoryInfo(args.Length > 0
                 ? args[0]
                 : Path.Combine(Environment.CurrentDirectory, nameof(_working)));
@@ -22,12 +28,15 @@ namespace SciNet.Generator
 
             _working.Create();
 
-            var types = AppDomain.CurrentDomain.GetAssemblies()
+            var exports = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetExportedTypes())
+                .ToArray();
+
+            var types = exports
                 .Where(type => type.Namespace != null && type.Namespace.StartsWith(nameof(SciNet)))
                 .ToArray();
 
-            var generators = types
+            var generators = exports
                 .Where(t => t.IsClass && t.GetInterfaces().Any(i => i == typeof(IGenerator)))
                 .Select(t => Activator.CreateInstance(t) as IGenerator)
                 .ToArray();

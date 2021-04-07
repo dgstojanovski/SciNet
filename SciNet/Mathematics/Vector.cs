@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
-using SciNet.Core;
-using SciNet.Core.Attributes;
+using MetaNet.Core;
+using MetaNet.Core.Attributes;
 using static SciNet.Mathematics.Real;
 using static SciNet.Mathematics.Complex;
 

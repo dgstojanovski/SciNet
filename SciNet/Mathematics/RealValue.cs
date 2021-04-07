@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using SciNet.Core;
-using SciNet.Core.Attributes;
+using MetaNet.Core;
+using MetaNet.Core.Attributes;
 
 namespace SciNet.Mathematics
 {
